@@ -1,0 +1,4 @@
+set_property PACKAGE_PIN B18 [get_ports {uart_rx_in}]
+set_property IOSTANDARD LVCMOS33 [get_ports {uart_rx_in}]
+set_property PACKAGE_PIN A18 [get_ports {uart_tx_out}]
+set_property IOSTANDARD LVCMOS33 [get_ports {uart_tx_out}]
