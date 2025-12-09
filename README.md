@@ -21,6 +21,12 @@ HolySoC provides a platform for learning and experimenting with:
 - **Programmable Firmware**: Supports C/Assembly programs compiled with the RISC-V GNU toolchain.
 - **Example Applications**: Includes a simple LED game and test programs to demonstrate functionality.
 
+## Datapath Architecture Visualization
+
+The core of the HolySoC is the custom RV32I processor. This diagram illustrates the high-level datapath, including the connections between the Program Counter (PC), Register File, ALU, and the separated buses for instruction and data memory access.
+
+![Custom RV32I Core Pipelined Datapath](img/HolySoCArmmyGoBoom.png)
+
 ## How Users Can Get Started
 
 ### Prerequisites
