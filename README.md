@@ -1,64 +1,83 @@
-RISC-V RV32I Soft-Core SoC on Basys 3 (Artix-7)
-🚀 Overview
-This repository documents the implementation of a fully functional System-on-Chip (SoC) based on a custom RV32I (RISC-V 32-bit Integer) soft-core processor. The entire system is deployed on a Digilent Basys 3 FPGA development board (featuring the Xilinx Artix-7 XC7A35T).
+# HolySoC: RISC-V RV32I Soft-Core SoC on Basys 3 (Artix-7)
 
-The core differentiator of this project is the integration of a custom, in-house designed CPU (sourced from a separate core repository) with essential peripherals, demonstrating a complete programmable embedded system capability on the FPGA. This is a significant step beyond standard hardwired FPGA designs.
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)]() [![License](https://img.shields.io/badge/license-NonCommercial-blue)](LICENSE)
 
-🔬 System-on-Chip (SoC) Architecture
-Core CPU and Architecture
-Core: Custom RV32I (32-bit Integer Instruction Set) Soft Processor.
+## What the Project Does
 
-Architecture: Implements a Pure/Modified Harvard Architecture (specify which one, as discussed previously) for instruction and data separation.
+HolySoC is a fully functional System-on-Chip (SoC) implementation based on a custom RISC-V RV32I soft-core processor **from the [RV32I Core Repository](https://github.com/ArmmyC/ArmmyRV32I)**. Designed for deployment on the Digilent Basys 3 FPGA development board (featuring the Xilinx Artix-7 XC7A35T), this project integrates a custom CPU core with essential peripherals to create a complete programmable embedded system. It demonstrates the power of hardware-software co-design by combining custom hardware modules with firmware written in C.
 
-Datapath: Custom single-cycle/pipelined datapath implemented in VHDL/Verilog (specify which language), focusing on optimization for the Artix-7 fabric. (Reference the provided datapath image to highlight complexity.)
+## Why the Project is Useful
 
-Integrated Peripherals
-The CPU communicates with custom memory and I/O blocks via an on-chip bus fabric (e.g., AXI-Lite/custom bus).
+HolySoC provides a platform for learning and experimenting with:
+- **Custom CPU Design**: Implements a RISC-V RV32I processor with single-cycle datapath and control logic. **Source Code is available in the [RV32I Core Repository](https://github.com/ArmmyC/ArmmyRV32I)**
+- **Hardware-Software Co-Design**: Integrates peripherals like UART, LEDs, switches, and 7-segment displays with software running on the CPU.
+- **FPGA Development**: Demonstrates how to build and deploy a fully functional SoC on the Basys 3 FPGA.
+- **Educational Value**: Ideal for students and hobbyists to explore processor design, memory-mapped I/O, and embedded systems programming.
 
-UART Controller: Implemented for host communication (e.g., running printf and collecting user input via a terminal program).
+### Key Features
+- **Custom RISC-V RV32I Processor**: Implements the 32-bit integer instruction set.
+- **Memory-Mapped I/O**: Interfaces with switches, buttons, LEDs, and 7-segment displays.
+- **UART Communication**: Enables interaction with a host terminal for debugging and data transfer.
+- **Programmable Firmware**: Supports C/Assembly programs compiled with the RISC-V GNU toolchain.
+- **Example Applications**: Includes a simple LED game and test programs to demonstrate functionality.
 
-I/O Handler: A dedicated memory-mapped peripheral to interface directly with the Basys 3 board's physical components:
+## How Users Can Get Started
 
-Input: Reading state from switches and buttons.
+### Prerequisites
+1. **Hardware**: Digilent Basys 3 FPGA board.
+2. **Software**:
+   - Xilinx Vivado (tested with version 2025.1 or later).
+   - RISC-V GNU toolchain (`riscv-none-embed-gcc`).
 
-Output: Controlling LEDs and displaying values on the 7-Segment Display.
+### Installation and Setup
+1. **Clone the Repository**:
+   
+   ```bash
+   git clone https://github.com/your-repo/HolySoC.git
+   cd HolySoC
+   ```
+   
+2. **Compile the Firmware**:
+  - Use the RISC-V toolchain to compile C/Assembly programs in the game_1/ directory.
+  - Example:
+   
+   ```bash
+   riscv-none-embed-gcc -o game_LED.elf game_LED.c
+   ```
 
-💾 Software and Toolchain
-This SoC is designed to execute programs compiled with the standard RISC-V GNU toolchain.
+3. **Generate Instruction Memory**:
+  -  Convert the compiled program to a memory file:
+    
+  ```bash
+  riscv-none-embed-objcopy -O verilog game_LED.elf instruction.mem
+  ```
 
-Toolchain: Utilizes the riscv-none-embed-gcc toolchain for cross-compilation.
+  - Replace the existing instruction.mem file with the generated one.
 
-Development Flow: Custom linker scripts and startup code allow C/C++ programs to be compiled directly into machine code that runs natively on the RV32I soft-core.
+4. **Synthesize and Implement the Design**:
+  - Open the project in Vivado.
+  - Run synthesis, implementation, and generate the bitstream.
 
-Demonstration: Includes example firmware demonstrating complex control logic (e.g., using the CPU to implement a software-based timer, state machine, or interrupt handler) that would be highly complex to implement using pure hardwired logic.
+5. **Program the FPGA**:
+  - Load the generated bitstream onto the Basys 3 board.
+  - Ensure the instruction.mem file is correctly loaded into the instruction memory.
+  
+## Usage Example
+  - **LED Game**:
+    - Use the switches to adjust the game speed.
+    - Press the buttons to interact with the game.
+    - LEDs and the 7-segment display provide feedback.
+    
+## Where Users Can Get Help
+  - Documentation: Refer to the comments in the source files for detailed explanations of each module.
+  - Issues: Report bugs or request features via the GitHub Issues page.
 
-✨ Key Achievements & Showcase Value
-This project goes beyond typical HDL labs by creating a truly programmable system.
+## Who Maintains and Contributes
+**Maintainer**:
+  - ArmmyC: [ArmmyC's GitHub Profile](https://github.com/ArmmyC)
 
-Custom CPU Implementation: Successful creation and integration of a proprietary RISC-V core, demonstrating deep understanding of processor design principles.
+**Contributing**:
+  - Contributions are welcome! Please follow the guidelines in the CONTRIBUTING.md file.
 
-Hardware-Software Co-Design: Shows the ability to write low-level C firmware that runs on the soft-core CPU to manage custom FPGA hardware peripherals.
-
-Complete Embedded System: A functioning, self-contained system capable of running complex, high-level code, demonstrating capabilities closer to a microcontroller or dedicated ASIC than a standard FPGA.
-
-📁 Repository Structure
-cpu_core/: Source files for the RV32I datapath and control unit (linking to the base CPU repo).
-
-peripherals/: HDL for the UART, I/O Handler, and Bus Interconnect logic.
-
-hdl/top/: The top-level wrapper (.v or .vhd) that instantiates the CPU core and all peripherals.
-
-software/: C/Assembly source code for bootloader (if applicable) and application firmware examples.
-
-constraint/: Xilinx .xdc files for pin assignments on the Basys 3.
-
-⚙️ Getting Started
-Clone this repository and the base RV32I core repository.
-
-Install the required RISC-V toolchain.
-
-Compile the firmware in software/ to generate the .hex or .mem file for the Instruction Memory.
-
-Synthesize and Implement the hardware design in Vivado (specify version if necessary).
-
-Load the bitstream onto the Basys 3 and verify functionality via the UART terminal and board I/O.
+## License
+This project is licensed under the Non-Commercial License. See the **[LICENSE](LICENSE)** file for details.
